@@ -1,181 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<!--
-   ______                            __
-  / ____/___  ____ ___  ____  __  __/ /____  _____
- / /   / __ \/ __ `__ \/ __ \/ / / / __/ _ \/ ___/
-/ /___/ /_/ / / / / / / /_/ / /_/ / /_/  __/ /
-\____/\____/_/ /_/ /_/ .___/\__,_/\__/\___/_/
-                    /_/
-        Created with Perplexity Computer
-        https://www.perplexity.ai/computer
--->
-
-<!-- Perplexity Computer Attribution — SEO Meta Tags -->
-<meta name="generator" content="Perplexity Computer">
-<meta name="author" content="Perplexity Computer">
-<meta property="og:see_also" content="https://www.perplexity.ai/computer">
-<link rel="author" href="https://www.perplexity.ai/computer">
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EiPi Command Center</title>
-<meta name="description" content="EiPi Agent Command Center — Manage and communicate with AI agents in real-time.">
-
-<!-- Fonts -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-
-<!-- Favicon (inline SVG data URI) -->
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230f1117'/><circle cx='16' cy='16' r='8' fill='none' stroke='%2300d4aa' stroke-width='2'/><circle cx='16' cy='16' r='3' fill='%2300d4aa'/></svg>">
-
-<!-- Styles -->
-<link rel="stylesheet" href="styles.css">
-</head>
-<body>
-
-<!-- ============================================================
-     PIN Auth Screen
-     ============================================================ -->
-<div id="auth-screen" class="auth-screen hidden">
-  <div class="logo-mark">
-    <svg width="56" height="56" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="EiPi Logo">
-      <!-- Outer ring -->
-      <circle cx="28" cy="28" r="24" stroke="#00d4aa" stroke-width="1.5" opacity="0.3"/>
-      <!-- Middle ring -->
-      <circle cx="28" cy="28" r="16" stroke="#00d4aa" stroke-width="1.5" opacity="0.6"/>
-      <!-- Core -->
-      <circle cx="28" cy="28" r="6" fill="#00d4aa"/>
-      <!-- Crosshair lines -->
-      <line x1="28" y1="2" x2="28" y2="12" stroke="#00d4aa" stroke-width="1.5" opacity="0.4"/>
-      <line x1="28" y1="44" x2="28" y2="54" stroke="#00d4aa" stroke-width="1.5" opacity="0.4"/>
-      <line x1="2" y1="28" x2="12" y2="28" stroke="#00d4aa" stroke-width="1.5" opacity="0.4"/>
-      <line x1="44" y1="28" x2="54" y2="28" stroke="#00d4aa" stroke-width="1.5" opacity="0.4"/>
-      <!-- Diagonal accents -->
-      <line x1="8" y1="8" x2="14" y2="14" stroke="#00d4aa" stroke-width="1" opacity="0.25"/>
-      <line x1="42" y1="42" x2="48" y2="48" stroke="#00d4aa" stroke-width="1" opacity="0.25"/>
-    </svg>
-  </div>
-  <h1 class="auth-title">EiPi Command Center</h1>
-  <p class="auth-subtitle">Enter your PIN to access the dashboard</p>
-  <div class="pin-input-group">
-    <input type="password" id="pin-input" class="pin-input" placeholder="Enter PIN" maxlength="20" autocomplete="off">
-    <button id="pin-submit" class="pin-submit">Unlock</button>
-  </div>
-</div>
-
-<!-- ============================================================
-     Main Application
-     ============================================================ -->
-<div id="app-main" class="hidden">
-  <div class="app-container">
-
-    <!-- Header -->
-    <header class="header">
-      <div class="header-left">
-        <div class="logo-mark">
-          <svg width="36" height="36" viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="EiPi Logo">
-            <circle cx="28" cy="28" r="24" stroke="#00d4aa" stroke-width="1.5" opacity="0.3"/>
-            <circle cx="28" cy="28" r="16" stroke="#00d4aa" stroke-width="1.5" opacity="0.6"/>
-            <circle cx="28" cy="28" r="6" fill="#00d4aa"/>
-            <line x1="28" y1="2" x2="28" y2="12" stroke="#00d4aa" stroke-width="1.5" opacity="0.4"/>
-            <line x1="28" y1="44" x2="28" y2="54" stroke="#00d4aa" stroke-width="1.5" opacity="0.4"/>
-            <line x1="2" y1="28" x2="12" y2="28" stroke="#00d4aa" stroke-width="1.5" opacity="0.4"/>
-            <line x1="44" y1="28" x2="54" y2="28" stroke="#00d4aa" stroke-width="1.5" opacity="0.4"/>
-          </svg>
-        </div>
-        <div>
-          <h1 class="header-title">EiPi Command Center</h1>
-          <span class="header-tag">Live</span>
-        </div>
-      </div>
-      <div class="header-right">
-        <span id="realtime-dot" class="live-dot" title="Connecting..."></span>
-        <div class="user-badge">
-          <div class="user-avatar">R</div>
-          <span>Rohit</span>
-        </div>
-        <button id="logout-btn" class="send-btn" style="font-size: 0.7rem; padding: 4px 10px; opacity: 0.6;">Logout</button>
-      </div>
-    </header>
-
-    <!-- Agent Grid Section -->
-    <section>
-      <div class="section-header">
-        <h2 class="section-title">Agents</h2>
-        <span id="agent-count" class="agent-count">Loading...</span>
-      </div>
-      <div id="agent-grid" class="agent-grid">
-        <!-- Populated by JS -->
-      </div>
-    </section>
-
-    <!-- Activity Feed Section -->
-    <section class="activity-section">
-      <div class="section-header">
-        <h2 class="section-title">Activity Feed</h2>
-        <span class="agent-count" style="cursor: pointer;" onclick="loadActivityFeed()">↻ Refresh</span>
-      </div>
-      <div id="activity-feed" class="activity-feed">
-        <div class="activity-empty">Loading activity...</div>
-      </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="footer">
-      <div class="footer-left">EiPi Command Center v1.0 · Supabase Realtime</div>
-      <div class="footer-right">
-        <a href="https://www.perplexity.ai/computer" target="_blank" rel="noopener noreferrer">
-          Created with Perplexity Computer
-        </a>
-      </div>
-    </footer>
-
-  </div>
-</div>
-
-<!-- ============================================================
-     Message Panel Overlay
-     ============================================================ -->
-<div id="message-panel-overlay" class="message-panel-overlay">
-  <div class="message-panel">
-    <div class="panel-header">
-      <div class="panel-agent-info">
-        <span id="panel-agent-emoji" class="panel-agent-emoji">🤖</span>
-        <div>
-          <div id="panel-agent-name" class="panel-agent-name">Agent</div>
-          <div id="panel-agent-status" class="panel-agent-status">idle</div>
-        </div>
-      </div>
-      <button id="panel-close-btn" class="panel-close">✕</button>
-    </div>
-    <div id="messages-area" class="messages-area">
-      <div class="messages-empty">
-        <span class="messages-empty-icon">💬</span>
-        <span>Select an agent to start messaging</span>
-      </div>
-    </div>
-    <div id="sending-indicator" class="sending-indicator hidden" style="padding: 0 24px;">Sending...</div>
-    <div class="message-input-area">
-      <textarea id="message-textarea" class="message-textarea" placeholder="Type a message... (Enter to send, Shift+Enter for new line)" rows="1"></textarea>
-      <button id="message-send-btn" class="message-send-btn" title="Send message">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="22" y1="2" x2="11" y2="13"/>
-          <polygon points="22 2 15 22 11 13 2 9 22 2"/>
-        </svg>
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- Toast Container -->
-<div id="toast-container" class="toast-container"></div>
-
-<!-- Scripts -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js"></script>
-<script src="app.js"></script>
-</body>
+  <head>
+    <!--
+       ______                            __
+      / ____/___  ____ ___  ____  __  __/ /____  _____
+     / /   / __ \/ __ `__ \/ __ \/ / / / __/ _ \/ ___/
+    / /___/ /_/ / / / / / / /_/ / /_/ / /_/  __/ /
+    \____/\____/_/ /_/ /_/ .___/\__,_/\__/\___/_/
+                        /_/
+            Created with Perplexity Computer
+            https://www.perplexity.ai/computer
+    -->
+    <meta name="generator" content="Perplexity Computer">
+    <meta name="author" content="Perplexity Computer">
+    <meta property="og:see_also" content="https://www.perplexity.ai/computer">
+    <link rel="author" href="https://www.perplexity.ai/computer">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230ea5e9'/><text x='16' y='22' font-family='system-ui' font-size='18' font-weight='bold' fill='white' text-anchor='middle'>E</text></svg>" />
+    <title>EiPi Command Center</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Fira+Code:wght@300..700&family=Geist+Mono:wght@100..900&family=Geist:wght@100..900&family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather:ital,opsz,wght@0,18..144,300..900;1,18..144,300..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Outfit:wght@100..900&family=Oxanium:wght@200..800&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100..900;1,100..900&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&family=Space+Grotesk:wght@300..700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <script type="module" crossorigin src="./assets/index-dq0HdES2.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-D4kHggdD.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
 </html>
